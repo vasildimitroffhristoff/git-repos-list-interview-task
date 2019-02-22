@@ -1,1 +1,1 @@
-# The Penguin Way (wanna be 🐧 ) 
+# The Penguin Way (wanna be 🐧 )
