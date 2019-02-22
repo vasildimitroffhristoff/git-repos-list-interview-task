@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import RepoItem from './RepoItem';
 import LoaderHOC from '../HOC/LoaderHOC';
 
@@ -12,5 +13,10 @@ class Repos extends Component {
 		);
 	}
 }
+
+Repos.propTypes = {
+	repos: PropTypes.array,
+	handleRepoItemClick: PropTypes.func
+};
 
 export default LoaderHOC('repos')(Repos);

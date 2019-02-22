@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Language = ({ languageName, percentage }) => {
 	return (
@@ -6,6 +7,11 @@ const Language = ({ languageName, percentage }) => {
 			<b>{languageName}</b> - {percentage} %
 		</span>
 	);
+};
+
+Language.propTypes = {
+	languageName: PropTypes.string,
+	percentage: PropTypes.string
 };
 
 export default Language;

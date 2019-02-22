@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Contributor = ({ name, avatar, url }) => {
 	return (
@@ -7,6 +8,12 @@ const Contributor = ({ name, avatar, url }) => {
 			{name}
 		</a>
 	);
+};
+
+Contributor.propTypes = {
+	name: PropTypes.string,
+	avatar: PropTypes.string,
+	url: PropTypes.string
 };
 
 export default Contributor;

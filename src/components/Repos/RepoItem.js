@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function RepoItem({ repo, handleRepoItemClick }) {
+const RepoItem = ({ repo, handleRepoItemClick }) => {
 	return (
 		<li onClick={() => handleRepoItemClick(repo)} className={repo.private ? 'private' : null}>
 			<span className="name">&#10004; {repo.name}</span>
@@ -16,4 +17,11 @@ export default function RepoItem({ repo, handleRepoItemClick }) {
 			<span className="description">{repo.description}</span>
 		</li>
 	);
-}
+};
+
+RepoItem.propTypes = {
+	repo: PropTypes.object,
+	handleRepoItemClick: PropTypes.func
+};
+
+export default RepoItem;
