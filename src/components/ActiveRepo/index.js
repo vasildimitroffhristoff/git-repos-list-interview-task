@@ -38,4 +38,4 @@ ActiveRepo.propTypes = {
 	languages: PropTypes.array
 };
 
-export default LoaderHOC('contributors')(ActiveRepo);
+export default LoaderHOC([ 'contributors', 'languages' ])(ActiveRepo);
