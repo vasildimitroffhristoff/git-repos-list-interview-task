@@ -4,19 +4,27 @@ import RepoItem from './RepoItem';
 import LoaderHOC from '../HOC/LoaderHOC';
 
 class Repos extends Component {
+	handleRepoItemClick = (repo) => {
+		const { name, contributors_url, languages_url } = repo;
+		this.props.setModalOpen(true);
+		this.props.setActiveRepo(name, contributors_url, languages_url);
+	};
 	render() {
-		const { repos, handleRepoItemClick } = this.props;
+		const { repos } = this.props;
 		return (
 			<ul>
-				{repos.map((repo) => <RepoItem key={repo.id} repo={repo} handleRepoItemClick={handleRepoItemClick} />)}
+				{repos.map((repo) => (
+					<RepoItem key={repo.id} repo={repo} handleRepoItemClick={this.handleRepoItemClick} />
+				))}
 			</ul>
 		);
 	}
 }
 
-Repos.propTypes = {
-	repos: PropTypes.array,
-	handleRepoItemClick: PropTypes.func
-};
+// Repos.propTypes = {
+// 	repos: PropTypes.array,
+// 	handleRepoItemClick: PropTypes.func
+// };
+// export default Repos;
 
 export default LoaderHOC('repos')(Repos);

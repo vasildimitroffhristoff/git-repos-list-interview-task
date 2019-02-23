@@ -19,9 +19,9 @@ const RepoItem = ({ repo, handleRepoItemClick }) => {
 	);
 };
 
-RepoItem.propTypes = {
-	repo: PropTypes.object,
-	handleRepoItemClick: PropTypes.func
-};
+// RepoItem.propTypes = {
+// 	repo: PropTypes.object,
+// 	handleRepoItemClick: PropTypes.func
+// };
 
 export default RepoItem;
