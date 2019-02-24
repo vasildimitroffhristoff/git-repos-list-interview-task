@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { API_URL, REPOS_URL } from './constants';
-import ActiveRepo from './components/ActiveRepo/';
-import Repos from './components/Repos/';
+import ActiveRepo from './components/ActiveRepo';
+import Repos from './components/Repos';
 import Modal from './components/Modal';
 import { extractLanguagesWithPercentageValue } from './utils';
 
@@ -46,17 +46,21 @@ class App extends Component {
 			showModal: false
 		});
 
+	getActiveRepoData = (...urls) => {
+		const promises = urls
+			.map((url) => {
+				return axios.get(`${url}?access_token=${process.env.REACT_APP_ACCESS_TOKEN}`);
+			})
+			.map((p) => p.then((res) => res.data));
+
+		return Promise.all(promises);
+	};
+
 	handleRepoItemClick = (repo) => {
-		const repo_title = repo.name;
-		const { contributors_url, languages_url } = repo;
+		const { name: title, contributors_url, languages_url } = repo;
 		this.showModal();
 
-		const promises = [
-			axios.get(`${contributors_url}?access_token=${process.env.REACT_APP_ACCESS_TOKEN}`),
-			axios.get(`${languages_url}?access_token=${process.env.REACT_APP_ACCESS_TOKEN}`)
-		].map((p) => p.then((res) => res.data));
-
-		Promise.all(promises)
+		this.getActiveRepoData(contributors_url, languages_url)
 			.then(([ contributors, languages ]) => {
 				let contributorsData;
 				if (contributors) {
@@ -76,7 +80,7 @@ class App extends Component {
 					...prevState,
 					activeRepoInfo: {
 						...prevState.activeRepoInfo,
-						title: repo_title,
+						title,
 						contributors: [ ...prevState.activeRepoInfo.contributors, ...contributorsData ],
 						languages: [ ...prevState.activeRepoInfo.languages, ...languagesWithPercentageValue ]
 					}
