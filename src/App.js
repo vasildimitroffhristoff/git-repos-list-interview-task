@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import { extractLanguagesWithPercentageValue } from './utils';
 import { API_URL, REPOS_URL } from './constants';
 import ActiveRepo from './components/ActiveRepo';
 import Repos from './components/Repos';
 import Modal from './components/Modal';
-import { extractLanguagesWithPercentageValue } from './utils';
 
 class App extends Component {
 	state = {
