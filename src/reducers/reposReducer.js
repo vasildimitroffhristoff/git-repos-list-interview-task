@@ -1,22 +1,15 @@
-import { FETCH_ALL_REPOS, SET_FETCHED_REPOS } from '../constants';
+import { SET_FETCHED_REPOS } from '../constants';
 
 const initialState = {
-	repos: [],
-	isFetching: false
+	repos: []
 };
 
 export default function(state = initialState, action) {
 	switch (action.type) {
-		case FETCH_ALL_REPOS:
-			return {
-				...state,
-				isFetching: true
-			};
 		case SET_FETCHED_REPOS:
 			return {
 				...state,
-				repos: action.payload,
-				isFetching: false
+				repos: action.payload
 			};
 
 		default:

@@ -1,23 +1,8 @@
 import axios from 'axios';
-import {
-	FETCH_ALL_REPOS,
-	SET_FETCHED_REPOS,
-	FETCH_ACTIVATED_REPO_INFO,
-	SET_ACTIVE_REPO_INFO,
-	SET_MODAL_STATE,
-	API_URL,
-	REPOS_URL
-} from '../constants';
+import { SET_FETCHED_REPOS, SET_ACTIVE_REPO_DATA, SET_MODAL_STATE, API_URL, REPOS_URL } from '../constants';
 import { extractLanguagesWithPercentageValue } from '../utils';
 
-const setReposLoading = () => {
-	return {
-		type: FETCH_ALL_REPOS
-	};
-};
-
 export const getRepos = () => (dispatch) => {
-	dispatch(setReposLoading());
 	axios
 		.get(`${API_URL}${REPOS_URL}?access_token=${process.env.REACT_APP_ACCESS_TOKEN}`)
 		.then((repos) => {
@@ -40,19 +25,9 @@ export const getRepos = () => (dispatch) => {
 		);
 };
 
-export const activateModal = (isOpened) => (dispatch) => {
-	if (isOpened === false) {
-		dispatch(setActiveRepoData(null, [], []));
-	}
-	dispatch({
-		type: SET_MODAL_STATE,
-		payload: isOpened
-	});
-};
-
-export const setActiveRepoData = (title, contributors, languages) => {
+const setActiveRepoData = (title, contributors, languages) => {
 	return {
-		type: SET_ACTIVE_REPO_INFO,
+		type: SET_ACTIVE_REPO_DATA,
 		payload: {
 			title: title,
 			contributors: contributors,
@@ -61,28 +36,41 @@ export const setActiveRepoData = (title, contributors, languages) => {
 	};
 };
 
-const getRepoData = (...urls) => {
-	return Promise.all(
-		urls
-			.map((url) => {
-				return axios.get(`${url}?access_token=${process.env.REACT_APP_ACCESS_TOKEN}`);
-			})
-			.map((p) => p.then((res) => res.data))
-	);
+const getActiveRepoData = (...urls) => {
+	const promises = urls
+		.map((url) => {
+			return axios.get(`${url}?access_token=${process.env.REACT_APP_ACCESS_TOKEN}`);
+		})
+		.map((p) => p.then((res) => res.data));
+	return Promise.all(promises);
 };
 
 export const setActiveRepo = (title, contributors_url, languages_url) => (dispatch) => {
-	dispatch({ type: FETCH_ACTIVATED_REPO_INFO });
-	getRepoData(contributors_url, languages_url).then(([ contributors, languages ]) => {
-		const contributorsData = contributors.map((contributor) => ({
-			id: contributor.id,
-			username: contributor.login,
-			avatar: contributor.avatar_url,
-			url: contributor.html_url
-		}));
+	dispatch(activateModal(true));
+	getActiveRepoData(contributors_url, languages_url)
+		.then(([ contributors, languages ]) => {
+			const contributorsData = contributors.map((contributor) => ({
+				id: contributor.id,
+				username: contributor.login,
+				avatar: contributor.avatar_url,
+				url: contributor.html_url
+			}));
 
-		const languagesWithPercentageValue = extractLanguagesWithPercentageValue(languages);
+			const languagesWithPercentageValue = extractLanguagesWithPercentageValue(languages);
 
-		dispatch(setActiveRepoData(title, contributorsData, languagesWithPercentageValue));
+			dispatch(setActiveRepoData(title, contributorsData, languagesWithPercentageValue));
+		})
+		.catch((err) => {
+			console.log('Something went wrong in the request.');
+		});
+};
+
+export const activateModal = (isOpened) => (dispatch) => {
+	if (isOpened === false) {
+		dispatch(setActiveRepoData(null, [], []));
+	}
+	dispatch({
+		type: SET_MODAL_STATE,
+		payload: isOpened
 	});
 };
